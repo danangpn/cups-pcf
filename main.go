@@ -34,6 +34,6 @@ func initCFVcap(vcap *cf.App)  {
 	for _, vcapService := range vcapServices {
 		log.Println("Init vcap Service: ",vcapService.Name)
 		//set vcap service to viper
-		viper.Set(fmt.Sprintf("%s.credentials",vcapService.Name),vcapService)
+		viper.Set(fmt.Sprintf("%s.credentials",vcapService.Name),vcapService.Credentials)
 	}
 }
