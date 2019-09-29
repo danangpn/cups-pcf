@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 func init() {
 	log.SetOutput(os.Stdout)
@@ -18,15 +19,10 @@ func init() {
 		viper.SetConfigFile(`local.json`)
 		_ = viper.ReadInConfig()
 	}
-}
-func main()  {
-	// Hello, the web server
-	helloHandler := func(w http.ResponseWriter, req *http.Request) {
-		str := fmt.Sprintf("Hello, %s !",viper.Get("test-cups.credentials.key"))
-		io.WriteString(w, str)
-	}
-	http.HandleFunc("/", helloHandler)
-	log.Panic(http.ListenAndServe(":8080", nil))
+	replacer := strings.NewReplacer(".", "_")
+	viper.SetEnvKeyReplacer(replacer)
+	viper.AutomaticEnv()
+	log.Println(os.Getenv("ENV_TEST"))
 }
 func initCFVcap(vcap *cf.App)  {
 	//fetch all bound services
@@ -36,4 +32,13 @@ func initCFVcap(vcap *cf.App)  {
 		//set vcap service to viper
 		viper.Set(fmt.Sprintf("%s.credentials",vcapService.Name),vcapService.Credentials)
 	}
+}
+func main()  {
+	// Hello, the web server
+	helloHandler := func(w http.ResponseWriter, req *http.Request) {
+		str := fmt.Sprintf("Hello, cups: %s,env var: %s !",viper.Get("test-cups.credentials.key"),viper.Get("env.test"))
+		io.WriteString(w, str)
+	}
+	http.HandleFunc("/", helloHandler)
+	log.Panic(http.ListenAndServe(":8080", nil))
 }
