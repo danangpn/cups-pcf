@@ -1,0 +1,11 @@
+applications:
+  - name: test-go-cups
+    instances: 1
+    memory: 16Mb
+    disk_quota: 32Mb
+    buildpacks:
+      - go_buildpack
+    env:
+      GOPACKAGENAME: explore
+    services:
+      - test-cups

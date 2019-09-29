@@ -1,0 +1,7 @@
+{
+  "test-cups": {
+    "credentials": {
+      "key": "test like a CF CUPS local"
+    }
+  }
+}
